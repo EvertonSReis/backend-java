@@ -27,6 +27,5 @@ public class TestConfig implements CommandLineRunner {
         Produto prod2 = new Produto(null, "Guarda Roupa", "6 Portas com Espelho", "Guarda Roupa Paris G01", new BigDecimal("1299.99"),Categorias.MOVEIS);
 
         produtoRepository.saveAll(Arrays.asList(prod1, prod2));
-
     }
 }
