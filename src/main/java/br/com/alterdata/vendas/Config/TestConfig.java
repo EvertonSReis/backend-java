@@ -25,7 +25,9 @@ public class TestConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Produto prod1 = new Produto(null, "Celular Iphone", "Lançamento 2022", "Iphone S13 Plus", new BigDecimal("4500"),Categorias.INFORMATICA);
         Produto prod2 = new Produto(null, "Guarda Roupa", "6 Portas com Espelho", "Guarda Roupa Paris G01", new BigDecimal("1299.99"),Categorias.MOVEIS);
+        Produto prod3 = new Produto(null, "Notebook Samsung", "SSD 500GB", "Samsung Ebook", new BigDecimal("3850.99"),Categorias.INFORMATICA);
 
-        produtoRepository.saveAll(Arrays.asList(prod1, prod2));
+
+        produtoRepository.saveAll(Arrays.asList(prod1, prod2, prod3));
     }
 }

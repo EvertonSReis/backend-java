@@ -1,5 +1,6 @@
 package br.com.alterdata.vendas.service;
 
+import br.com.alterdata.vendas.enums.Categorias;
 import br.com.alterdata.vendas.model.Produto;
 import br.com.alterdata.vendas.repository.ProdutoRepository;
 import java.util.List;
@@ -35,5 +36,9 @@ public class ProdutoService {
 
     public void delete(Long id){
         produtoRepository.deleteById(id);
+    }
+
+    public int updateCategoria(Produto produto){
+        return produtoRepository.updateCategoria(produto.getId(), produto.getCategoria());
     }
 }

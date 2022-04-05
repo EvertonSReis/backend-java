@@ -28,8 +28,8 @@ public class Produto {
     @Column(name = "valor_unitario")
     private BigDecimal valorUnitario;
 
-    @NotNull
-    @Column(name = "Categoria_Produto")
+
+    @Column(name = "Categoria_Produto", length = 20, nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Categorias categoria;
 
