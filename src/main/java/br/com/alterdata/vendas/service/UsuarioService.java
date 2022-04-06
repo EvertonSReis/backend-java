@@ -1,5 +1,6 @@
 package br.com.alterdata.vendas.service;
 
+import br.com.alterdata.vendas.Util.HashUtil;
 import br.com.alterdata.vendas.model.Usuario;
 import br.com.alterdata.vendas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,17 @@ public class UsuarioService {
     @Autowired UsuarioRepository usuarioRepository;
 
     public Usuario salvar(Usuario usuario){
+        String hash = HashUtil.getSecureHash(usuario.getSenha());
+        usuario.setSenha(hash);
+
         Usuario salvarUsuario = usuarioRepository.save(usuario);
         return salvarUsuario;
     }
 
     public Usuario update(Usuario usuario){
+        String hash = HashUtil.getSecureHash(usuario.getSenha());
+        usuario.setSenha(hash);
+
         Usuario updateUsuario = usuarioRepository.save(usuario);
         return updateUsuario;
     }
@@ -41,6 +48,8 @@ public class UsuarioService {
     }
 
     public Usuario login(String email, String senha){
+        senha = HashUtil.getSecureHash(senha);
+
         Optional<Usuario> obj = usuarioRepository.login(email, senha);
         return obj.orElse(new Usuario());
     }
