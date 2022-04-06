@@ -2,19 +2,19 @@ package br.com.alterdata.vendas.model;
 
 import br.com.alterdata.vendas.enums.Categorias;
 import com.sun.istack.NotNull;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "produtos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Produto {
+public class Produto implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
 

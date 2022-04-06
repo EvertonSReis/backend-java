@@ -1,8 +1,11 @@
 package br.com.alterdata.vendas.Config;
 
 import br.com.alterdata.vendas.enums.Categorias;
+import br.com.alterdata.vendas.enums.Role;
 import br.com.alterdata.vendas.model.Produto;
+import br.com.alterdata.vendas.model.Usuario;
 import br.com.alterdata.vendas.repository.ProdutoRepository;
+import br.com.alterdata.vendas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +21,9 @@ import java.util.Arrays;
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    @Autowired private ProdutoRepository produtoRepository;
+
+    @Autowired private UsuarioRepository usuarioRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -27,7 +31,10 @@ public class TestConfig implements CommandLineRunner {
         Produto prod2 = new Produto(null, "Guarda Roupa", "6 Portas com Espelho", "Guarda Roupa Paris G01", new BigDecimal("1299.99"),Categorias.MOVEIS);
         Produto prod3 = new Produto(null, "Notebook Samsung", "SSD 500GB", "Samsung Ebook", new BigDecimal("3850.99"),Categorias.INFORMATICA);
 
-
         produtoRepository.saveAll(Arrays.asList(prod1, prod2, prod3));
+
+        Usuario user1 = new Usuario(null, "Everton Reis", "everton@gmail.com", "123456", Role.ADMINISTRADOR);
+
+        usuarioRepository.saveAll(Arrays.asList(user1));
     }
 }
