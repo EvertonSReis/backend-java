@@ -6,10 +6,14 @@ import br.com.alterdata.vendas.dto.UsuarioLoginResponsedto;
 import br.com.alterdata.vendas.dto.UsuarioLogindto;
 import br.com.alterdata.vendas.dto.UsuarioUpdateRoledto;
 import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.security.AccessManager;
 import br.com.alterdata.vendas.security.JwtManager;
 import br.com.alterdata.vendas.service.UsuarioService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,14 +31,16 @@ public class UsuarioController {
     @Autowired private UsuarioService usuarioService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtManager jwtManager;
+    @Autowired private AccessManager accessManager;
 
-
+    @Secured({ "ROLE_ADMINISTRADOR"})
     @PostMapping
     public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario){
         Usuario obj = usuarioService.salvar(usuario);
         return ResponseEntity.ok().body(obj);
     }
 
+    @PreAuthorize("@accessManager.isUsuario(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> update(@PathVariable(name = "id") Long id,
                                           @RequestBody Usuario usuario){
@@ -50,7 +56,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> listarPorId(@PathVariable Long id){
+    public ResponseEntity<Usuario> listarPorId(@PathVariable Long id) throws NotFoundException {
         Usuario usuario = usuarioService.listarPorId(id);
         return ResponseEntity.ok().body(usuario);
     }
@@ -61,9 +67,10 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
+    @Secured({ "ROLE_ADMINISTRADOR"})
     @PatchMapping("/role/{id}")
     public ResponseEntity<?> updateRole(@PathVariable(name = "id") Long id,
-                                             @RequestBody @Valid UsuarioUpdateRoledto usuariodto){
+                                        @RequestBody @Valid UsuarioUpdateRoledto usuariodto){
         Usuario usuario = new Usuario();
         usuario.setId(id);
         usuario.setRole(usuariodto.getRole());

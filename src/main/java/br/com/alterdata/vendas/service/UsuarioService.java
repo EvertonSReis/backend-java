@@ -3,6 +3,7 @@ package br.com.alterdata.vendas.service;
 import br.com.alterdata.vendas.Util.HashUtil;
 import br.com.alterdata.vendas.model.Usuario;
 import br.com.alterdata.vendas.repository.UsuarioRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,9 +42,9 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario listarPorId(Long id){
-        Optional<Usuario> obj = usuarioRepository.findById(id);
-        return obj.get();
+    public Usuario listarPorId(Long id) throws NotFoundException {
+        Optional<Usuario> resultado = usuarioRepository.findById(id);
+        return resultado.orElseThrow(()-> new NotFoundException("Não existe usuario com o id " + id));
     }
 
     public void delete(Long id){
@@ -70,7 +71,7 @@ public class UsuarioService implements UserDetailsService {
 
         Usuario usuario = resultado.get();
 
-        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE -" + usuario.getRole().name()));
+        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + usuario.getRole().name()));
 
         User user = new User(usuario.getEmail(), usuario.getSenha(), authorities);
         return user;
