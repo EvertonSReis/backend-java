@@ -1,6 +1,8 @@
 package br.com.alterdata.vendas.security;
 
 import br.com.alterdata.vendas.constant.ConstantesSeguranca;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,15 @@ public class JwtManager {
                 .claim(ConstantesSeguranca.JWT_ROLE_KEY, roles)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguranca.API_KEY.getBytes())
                 .compact();
-
         return jwt;
+    }
+
+    public Claims parseToken(String jwt) throws JwtException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(ConstantesSeguranca.API_KEY.getBytes())
+                .parseClaimsJws(jwt)
+                .getBody();
+
+        return claims;
     }
 }
