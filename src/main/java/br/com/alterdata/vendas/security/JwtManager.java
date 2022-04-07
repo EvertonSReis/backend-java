@@ -1,6 +1,7 @@
 package br.com.alterdata.vendas.security;
 
 import br.com.alterdata.vendas.constant.ConstantesSeguranca;
+import br.com.alterdata.vendas.dto.UsuarioLoginResponsedto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,7 +14,7 @@ import java.util.List;
 @Component
 public class JwtManager {
 
-    public String criacaoToken(String email, List<String> roles){
+    public UsuarioLoginResponsedto criacaoToken(String email, List<String> roles){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, ConstantesSeguranca.JWT_EXP_DAYS);
         String jwt = Jwts.builder()
@@ -22,7 +23,9 @@ public class JwtManager {
                 .claim(ConstantesSeguranca.JWT_ROLE_KEY, roles)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguranca.API_KEY.getBytes())
                 .compact();
-        return jwt;
+
+        Long expiredIn = calendar.getTimeInMillis();
+        return new UsuarioLoginResponsedto(jwt, expiredIn, ConstantesSeguranca.JWT_PROVIDER);
     }
 
     public Claims parseToken(String jwt) throws JwtException {

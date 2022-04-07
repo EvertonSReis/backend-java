@@ -2,6 +2,7 @@ package br.com.alterdata.vendas.controller;
 
 
 
+import br.com.alterdata.vendas.dto.UsuarioLoginResponsedto;
 import br.com.alterdata.vendas.dto.UsuarioLogindto;
 import br.com.alterdata.vendas.dto.UsuarioUpdateRoledto;
 import br.com.alterdata.vendas.model.Usuario;
@@ -73,7 +74,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UsuarioLogindto usurious){
+    public ResponseEntity<UsuarioLoginResponsedto> login(@RequestBody @Valid UsuarioLogindto usurious){
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(usurious.getEmail(), usurious.getSenha());
         Authentication auth = authenticationManager.authenticate(token);
 
@@ -85,8 +86,6 @@ public class UsuarioController {
         String email = user.getUsername();
         List<String> roles = user.getAuthorities().stream().map(authority -> authority.getAuthority())
                 .collect(Collectors.toList());
-
-
 
         return ResponseEntity.ok(jwtManager.criacaoToken(email, roles));
     }
