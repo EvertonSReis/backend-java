@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 public class Produto implements Serializable {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Long id;
 
     @NotNull private String nome;
 

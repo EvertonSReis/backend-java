@@ -5,19 +5,28 @@ package br.com.alterdata.vendas.controller;
 import br.com.alterdata.vendas.dto.UsuarioLogindto;
 import br.com.alterdata.vendas.dto.UsuarioUpdateRoledto;
 import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.security.JwtManager;
 import br.com.alterdata.vendas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("usuario")
+@RequestMapping("users")
 public class UsuarioController {
-    @Autowired
-    private UsuarioService usuarioService;
+    @Autowired private UsuarioService usuarioService;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private JwtManager jwtManager;
+
 
     @PostMapping
     public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario){
@@ -64,8 +73,21 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody @Valid UsuarioLogindto usuario){
-        Usuario loggedUsuario = usuarioService.login(usuario.getEmail(), usuario.getSenha());
-        return ResponseEntity.ok(loggedUsuario);
+    public ResponseEntity<String> login(@RequestBody @Valid UsuarioLogindto usurious){
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(usurious.getEmail(), usurious.getSenha());
+        Authentication auth = authenticationManager.authenticate(token);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+        User user = (User) auth.getPrincipal();
+
+        String email = user.getUsername();
+        List<String> roles = user.getAuthorities().stream().map(authority -> authority.getAuthority())
+                .collect(Collectors.toList());
+
+
+
+        return ResponseEntity.ok(jwtManager.criacaoToken(email, roles));
     }
 }

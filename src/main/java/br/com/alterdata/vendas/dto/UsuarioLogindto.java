@@ -1,15 +1,13 @@
 package br.com.alterdata.vendas.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter @Setter
 public class UsuarioLogindto {
 
     @Email(message = "Invalid email address!")
