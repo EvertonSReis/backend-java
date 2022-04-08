@@ -2,9 +2,16 @@ package br.com.alterdata.vendas.service;
 
 import br.com.alterdata.vendas.Util.HashUtil;
 import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.model.model.PageModel;
+import br.com.alterdata.vendas.model.model.PageRequestModel;
 import br.com.alterdata.vendas.repository.UsuarioRepository;
+import br.com.alterdata.vendas.specification.UsuarioSpecification;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -62,6 +69,16 @@ public class UsuarioService implements UserDetailsService {
         return obj.orElse(new Usuario());
     }
 
+    public PageModel<Usuario> listAllOnLazyModel(PageRequestModel pr){
+        Pageable pageable = pr.toSpringPageRequest();
+
+        Specification<Usuario> specification = UsuarioSpecification.search(pr.getSearch());
+
+        Page<Usuario> page = usuarioRepository.findAll(specification, pageable);
+
+        PageModel<Usuario> pm = new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+        return pm;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

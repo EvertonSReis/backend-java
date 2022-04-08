@@ -3,8 +3,13 @@ package br.com.alterdata.vendas.controller;
 import br.com.alterdata.vendas.dto.ProdutoUpdateCategoriadto;
 import br.com.alterdata.vendas.enums.Categorias;
 import br.com.alterdata.vendas.model.Produto;
+import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.model.model.PageModel;
+import br.com.alterdata.vendas.model.model.PageRequestModel;
 import br.com.alterdata.vendas.service.ProdutoService;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +38,10 @@ public class ProdutosController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> listar() {
-        List<Produto> produtos = produtoService.listar();
-        return ResponseEntity.ok().body(produtos);
+    public ResponseEntity<PageModel<Produto>> listar(@RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
+        PageModel<Produto> pm = produtoService.listAllOnLazyModel(pr);
+        return ResponseEntity.ok(pm);
     }
 
     @GetMapping("/{id}")

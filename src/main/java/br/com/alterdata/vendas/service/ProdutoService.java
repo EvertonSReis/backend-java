@@ -2,11 +2,20 @@ package br.com.alterdata.vendas.service;
 
 import br.com.alterdata.vendas.enums.Categorias;
 import br.com.alterdata.vendas.model.Produto;
+import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.model.model.PageModel;
+import br.com.alterdata.vendas.model.model.PageRequestModel;
 import br.com.alterdata.vendas.repository.ProdutoRepository;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.alterdata.vendas.specification.ProdutoSpecification;
+import br.com.alterdata.vendas.specification.UsuarioSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -40,5 +49,16 @@ public class ProdutoService {
 
     public int updateCategoria(Produto produto){
         return produtoRepository.updateCategoria(produto.getId(), produto.getCategoria());
+    }
+
+    public PageModel<Produto> listAllOnLazyModel(PageRequestModel pr){
+        Pageable pageable = pr.toSpringPageRequest();;
+
+        Specification<Produto> specification = ProdutoSpecification.search(pr.getSearch());
+
+        Page<Produto> page = produtoRepository.findAll(specification, pageable);
+
+        PageModel<Produto> pm = new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+        return pm;
     }
 }

@@ -6,6 +6,8 @@ import br.com.alterdata.vendas.dto.UsuarioLoginResponsedto;
 import br.com.alterdata.vendas.dto.UsuarioLogindto;
 import br.com.alterdata.vendas.dto.UsuarioUpdateRoledto;
 import br.com.alterdata.vendas.model.Usuario;
+import br.com.alterdata.vendas.model.model.PageModel;
+import br.com.alterdata.vendas.model.model.PageRequestModel;
 import br.com.alterdata.vendas.security.AccessManager;
 import br.com.alterdata.vendas.security.JwtManager;
 import br.com.alterdata.vendas.service.UsuarioService;
@@ -23,10 +25,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("usuarios")
 public class UsuarioController {
     @Autowired private UsuarioService usuarioService;
     @Autowired private AuthenticationManager authenticationManager;
@@ -50,9 +53,10 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
-        List<Usuario> usuarios = usuarioService.listar();
-        return ResponseEntity.ok().body(usuarios);
+    public ResponseEntity<PageModel<Usuario>> listar(@RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
+        PageModel<Usuario> pm = usuarioService.listAllOnLazyModel(pr);
+        return ResponseEntity.ok(pm);
     }
 
     @GetMapping("/{id}")
