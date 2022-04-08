@@ -25,4 +25,10 @@ public class AccessManager {
 
         return usuario.getId() == id;
     }
+
+    public Usuario obterUsuarioLogado() throws NotFoundException {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Não existe usuario com o email"));
+    }
 }
