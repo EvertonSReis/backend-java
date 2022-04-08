@@ -23,7 +23,7 @@ class ProdutoControllerTests {
     void contextLoads() {}
 
     @Test
-    void saveTest(){
+    void cadastrarUmNovoProduto(){
         Produto produto = new Produto(null,"Sofa 3 lugares", "Lançamento 2022", "Vermelho", new BigDecimal("1599.99"),Categorias.MOVEIS);
         Produto createdProduto = produtoRepository.save(produto);
 
@@ -32,7 +32,7 @@ class ProdutoControllerTests {
     }
 
     @Test
-    void updateTest(){
+    void atualizarProdutoExistente(){
         Produto produto = new Produto(5L,"Sofa 3 lugares", "Lançamento 2021", "Vermelho", new BigDecimal("1599.99"),Categorias.MOVEIS);
         Produto updateProduto = produtoRepository.save(produto);
 
@@ -41,7 +41,7 @@ class ProdutoControllerTests {
     }
 
     @Test
-    void updateCategoriaTest(){
+    void atualizarCategoriaTest(){
         int affectedRows = produtoRepository.updateCategoria(1L, Categorias.MOVEIS);
         assertThat(affectedRows).isEqualTo(1);
     }
@@ -60,5 +60,7 @@ class ProdutoControllerTests {
 
         assertThat(produto.size()).isEqualTo(3);
     }
+
+
 
 }

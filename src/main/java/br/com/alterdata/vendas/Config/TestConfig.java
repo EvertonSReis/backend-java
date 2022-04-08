@@ -33,8 +33,9 @@ public class TestConfig implements CommandLineRunner {
 
         produtoRepository.saveAll(Arrays.asList(prod1, prod2, prod3));
 
-        Usuario user1 = new Usuario(null, "Alterdata Software", "alterdata@gmail.com", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", Role.ADMINISTRADOR);
+        Usuario user1 = new Usuario(null, "Alterdata Software Supervisor", "supervisor@alterdata.com.br", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", Role.ADMINISTRADOR);
+        Usuario user2 = new Usuario(null, "Alterdata Software Geral", "usuario@alterdata.com.br", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", Role.GERAL);
 
-        usuarioRepository.saveAll(Arrays.asList(user1));
+        usuarioRepository.saveAll(Arrays.asList(user1, user2));
     }
 }
